@@ -24,11 +24,21 @@
         android:text="TextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/tvUserName"
+        android:id="@+id/tvName"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="5dp"
+        />
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_toRightOf="@id/ivProfileImage"
         android:layout_alignBottom="@+id/ivProfileImage"
         android:layout_below="@+id/tvUserName"
         android:id="@+id/tvBody"
-        android:layout_marginLeft="5dp"/>
+        android:layout_marginLeft="5dp"
+        />
 
     <TextView
         android:id="@+id/tvTimestamp"
