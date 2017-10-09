@@ -26,6 +26,8 @@ public class TwitterClient extends OAuthBaseClient {
 	public static final String REST_CONSUMER_KEY = "LVLmSUPCasR9yjoqjdoQuLwq3";       // Change this
 	public static final String REST_CONSUMER_SECRET = "zB9kL7nVHi8kfEUExZFcWp6F75toLCqYvtabeoLVSAcJSJo127"; // Change this
     public static int callsToGetHomeTimeline = 0;
+    public static int callsToGetMentionsTimeline = 0;
+    public static int callsToGetUserTimeline = 0;
 	// Landing page to indicate the OAuth flow worked in case Chrome for Android 25+ blocks navigation back to the app.
 	public static final String FALLBACK_URL = "https://codepath.github.io/android-rest-client-template/success.html";
 
@@ -57,12 +59,57 @@ public class TwitterClient extends OAuthBaseClient {
         callsToGetHomeTimeline++;
 	}
 
+    public  void getMentionsTimeline(AsyncHttpResponseHandler handler,int count,long maxId) {
+        String apiUrl = getApiUrl("statuses/mentions_timeline.json");
+        // Can specify query string params directly or through RequestParams.
+        RequestParams params = new RequestParams();
+        if(callsToGetMentionsTimeline==0) {
+            maxId = 1;
+            count = 25;
+        }
+
+        params.put("count", count);
+        params.put("maxId",maxId);
+        client.get(apiUrl, params, handler);
+        callsToGetMentionsTimeline++;
+    }
+
 	public void postTweet(AsyncHttpResponseHandler handler,String status)
 	{
 		String url = getApiUrl("statuses/update.json");
 		RequestParams params = new RequestParams("status",status);
 		client.post(url, params,handler);
 	}
+
+    public  void getUserTimeline(String screenName,AsyncHttpResponseHandler handler,int count,long maxId) {
+        String apiUrl = getApiUrl("statuses/user_timeline.json");
+        // Can specify query string params directly or through RequestParams.
+        RequestParams params = new RequestParams();
+        if(callsToGetUserTimeline==0) {
+            maxId = 1;
+            count = 25;
+        }
+
+        params.put("count", count);
+        params.put("maxId",maxId);
+        params.put("screen_name",screenName);
+        params.put("count", count);
+        client.get(apiUrl, params, handler);
+        callsToGetUserTimeline++;
+    }
+
+    public  void getUserInfo(AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("account/verify_credentials.json");
+        client.get(apiUrl, null, handler);
+    }
+
+    public  void showUserInfo(String screenName,AsyncHttpResponseHandler handler) {
+        String apiUrl = getApiUrl("users/show.json");
+        RequestParams params = new RequestParams();
+        params.put("screen_name",screenName);
+        client.get(apiUrl, params, handler);
+    }
+
 
 	/* 1. Define the endpoint URL with getApiUrl and pass a relative path to the endpoint
 	 * 	  i.e getApiUrl("statuses/home_timeline.json");

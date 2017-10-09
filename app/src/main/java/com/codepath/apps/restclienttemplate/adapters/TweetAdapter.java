@@ -20,11 +20,17 @@ import java.util.List;
 
 public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> {
     private List<Tweet> mTweets;
-    public  TweetAdapter(List<Tweet> tweets){
-        mTweets = tweets;
-    }
+    private TweetAdapterListener mListener;
     Context context;
+    public interface TweetAdapterListener{
+         void onItemSelected(View view,int position);
+    }
 
+    public  TweetAdapter(List<Tweet> tweets,TweetAdapterListener listener)
+    {
+        mTweets = tweets;
+        mListener = listener;
+    }
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         context = parent.getContext();
@@ -50,7 +56,7 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
         return mTweets.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder{
+    public  class ViewHolder extends RecyclerView.ViewHolder{
 
         public ImageView ivProfileImage;
         public TextView tvUserName;
@@ -66,6 +72,15 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
             tvBody = (TextView) itemView.findViewById(R.id.tvBody);
             tvTimeStamp = (TextView) itemView.findViewById(R.id.tvTimestamp);
             tvName = (TextView) itemView.findViewById(R.id.tvName);
+            ivProfileImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mListener!=null){
+                        int position = getAdapterPosition();
+                        mListener.onItemSelected(v,position);
+                    }
+                }
+            });
         }
 
     }
